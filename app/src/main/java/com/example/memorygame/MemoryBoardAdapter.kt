@@ -56,7 +56,7 @@ class MemoryBoardAdapter(
 
         fun bind(position: Int) {
             val memoryCard= cards[position]
-            imageButton.setImageResource(if (cards [position].isFaceUp) cards[position].identifier else R.drawable.ic_launcher_background)
+            imageButton.setImageResource(if (cards [position].isFaceUp) cards[position].identifier else R.drawable.screenshot)
 
             imageButton.alpha = if(memoryCard.isMatched) .4f else 1.0f
             val colorStateList = if (memoryCard.isMatched) ContextCompat.getColorStateList(context,R.color.color_gray) else null
