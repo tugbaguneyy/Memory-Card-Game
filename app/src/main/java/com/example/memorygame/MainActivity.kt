@@ -3,8 +3,6 @@ package com.example.memorygame
 import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.media.AudioManager
-import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,17 +13,17 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.memorygame.databinding.ActivityMainBinding
 import com.example.memorygame.models.BoardSize
-import com.example.memorygame.models.MemoryCard
 import com.example.memorygame.models.MemoryGame
 import com.example.memorygame.utils.EXTRA_BOARD_SIZE
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,14 +31,15 @@ class MainActivity : AppCompatActivity() {
         private const val TAG="MainActivity"
         private const val CREATE_REQUEST_CODE =248
     }
-    //lateinit var playIB: ImageButton
+    lateinit var playIB: ImageButton
     //lateinit var pauseIB: ImageButton
     //lateinit var mediaPlayer: MediaPlayer
     private lateinit var clRoot: ConstraintLayout
     private lateinit var rvBoard: RecyclerView
     private lateinit var tvHamleS: TextView
     private lateinit var tvEsS: TextView
-
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var  binding: ActivityMainBinding
     private lateinit var memoryGame: MemoryGame
     private lateinit var adapter: MemoryBoardAdapter
     private var boardSize: BoardSize= BoardSize.EASY
@@ -56,7 +55,11 @@ class MainActivity : AppCompatActivity() {
         rvBoard= findViewById(R.id.rvBoard)
         tvHamleS= findViewById(R.id.tvHamleS)
         tvEsS=findViewById(R.id.tvEsS)
-
+        playIB=findViewById((R.id.btn_sound))
+        playIB.setOnClickListener{
+            val intent =Intent(this,LoginActivity::class.java)
+            startActivity(intent)
+        }
 
         val intent =Intent(this,CreateActivity::class.java)
         intent.putExtra(EXTRA_BOARD_SIZE,BoardSize.EASY)
@@ -193,6 +196,7 @@ class MainActivity : AppCompatActivity() {
         tvHamleS.text = "Hamle Sayısı: ${memoryGame.getNumMoves()}"
         adapter.notifyDataSetChanged()
     }
+
 
 
 }
