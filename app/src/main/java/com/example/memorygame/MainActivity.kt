@@ -6,6 +6,7 @@ import android.content.Intent
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     }
     lateinit var playIB: ImageButton
     lateinit var pauseIB: ImageButton
+    private lateinit var timertext: TextView
     //lateinit var mediaPlayer: MediaPlayer
     var mMediaPlayer: MediaPlayer? = null
     private lateinit var clRoot: ConstraintLayout
@@ -47,20 +49,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var memoryGame: MemoryGame
     private lateinit var adapter: MemoryBoardAdapter
     private var boardSize: BoardSize= BoardSize.EASY
+    private lateinit var timer: CountDownTimer
 
 
 
-    @SuppressLint("SuspiciousIndentation")
+
+    @SuppressLint("SuspiciousIndentation", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        playSound()
         clRoot=findViewById(R.id.clRoot)
         rvBoard= findViewById(R.id.rvBoard)
         tvHamleS= findViewById(R.id.tvHamleS)
         tvEsS=findViewById(R.id.tvEsS)
         playIB=findViewById((R.id.btn_sound))
         pauseIB=findViewById(R.id.btn_pause)
+        timertext=findViewById(R.id.tw)
         playIB.setOnClickListener{
             playSound()
 
@@ -71,13 +76,31 @@ class MainActivity : AppCompatActivity() {
             stopSound()
 
         }
+        timer= object : CountDownTimer(4_5000,1) {
+            override fun onTick(remaining: Long) {
 
-        /*val intent =Intent(this,CreateActivity::class.java)
+                timertext.text=(remaining/1000).toString()
+            }
+
+            override fun onFinish() {
+                timertext.text="Bitti"
+                setupBoard()
+                stopSound()
+                playSound4()
+
+               // timer.start()
+            }
+        }
+
+
+        /*val intent =Intent(this,LoginActivity::class.java)
         intent.putExtra(EXTRA_BOARD_SIZE,BoardSize.EASY)
         startActivity(intent)*/
 
         setupBoard()
     }
+
+
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -88,14 +111,23 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId){
             R.id.refresh ->{
+                timer.start()
+                stopSound()
+                playSound()
                 if(memoryGame.getNumMoves()>0 && !memoryGame.haveWonGame()){
+                    timer.cancel()
                     showAlertDialog("Oyun Yeniden Başlatılacak. Onaylıyor musunuz?",null,View.OnClickListener {
-                       setupBoard()
+                        setupBoard()
+                        timer.start()
                     })
                 }else {
                     setupBoard()
+
                 }
                 return true
+            }
+            R.id.start ->{
+                timer.start()
             }
             R.id.zorlukS->{
                 showNewSizeDialog()
@@ -205,6 +237,8 @@ class MainActivity : AppCompatActivity() {
             return
         }
         if(memoryGame.flipCard(position)){
+            stopSound()
+            playSound3()
             Log.i(TAG,"Eşleşme Doğru! Eşleşen Kart Sayısı: ${memoryGame.numPairsFound}")
             val color = ArgbEvaluator().evaluate(
                 memoryGame.numPairsFound.toFloat() / boardSize.getNumPairs(),
@@ -213,8 +247,14 @@ class MainActivity : AppCompatActivity() {
                 ) as Int
             tvEsS.setTextColor(color)
             tvEsS.text= "Eşleşen Kart Sayısı: ${memoryGame.numPairsFound} / ${boardSize.getNumPairs()}"
+
             if( memoryGame.haveWonGame()){
                 Snackbar.make(clRoot,"Tebrikler! Kazandınız..",Snackbar.LENGTH_LONG).show()
+                timer.cancel()
+                stopSound()
+                playSound2()
+
+
             }
         }
         tvHamleS.text = "Hamle Sayısı: ${memoryGame.getNumMoves()}"
@@ -225,6 +265,27 @@ class MainActivity : AppCompatActivity() {
         if (mMediaPlayer == null) {
             mMediaPlayer = MediaPlayer.create(this, R.raw.prologue)
             mMediaPlayer!!.isLooping = true
+            mMediaPlayer!!.start()
+        } else mMediaPlayer!!.start()
+    }
+    fun playSound2() {
+        if (mMediaPlayer == null) {
+            mMediaPlayer = MediaPlayer.create(this, R.raw.congratulations)
+            mMediaPlayer!!.isLooping = false
+            mMediaPlayer!!.start()
+        } else mMediaPlayer!!.start()
+    }
+    fun playSound3() {
+        if (mMediaPlayer == null) {
+            mMediaPlayer = MediaPlayer.create(this, R.raw.wheels)
+            mMediaPlayer!!.isLooping = false
+            mMediaPlayer!!.start()
+        } else mMediaPlayer!!.start()
+    }
+    fun playSound4() {
+        if (mMediaPlayer == null) {
+            mMediaPlayer = MediaPlayer.create(this, R.raw.finish)
+            mMediaPlayer!!.isLooping = false
             mMediaPlayer!!.start()
         } else mMediaPlayer!!.start()
     }
@@ -243,6 +304,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+            /*val intent =Intent(this,LoginActivity::class.java)
+            intent.putExtra(EXTRA_BOARD_SIZE,BoardSize.EASY)
+            startActivity(intent)
+            finish()*/
+
+        timertext.text="Oyunu Başlat!"
+    }
+
+    private fun reload() {
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        timer.cancel()
+    }
 
 
 }
