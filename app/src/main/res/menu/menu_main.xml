@@ -8,6 +8,14 @@
         android:title="Zorluk Seviyesi"
         app:showAsAction="never" />
     <item
+        android:id="@+id/signin"
+        android:title="Oturum Aç"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/signout"
+        android:title="Oturumu Kapat"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/custom"
         android:visible="false" />
     <item

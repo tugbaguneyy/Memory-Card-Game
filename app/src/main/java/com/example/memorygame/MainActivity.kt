@@ -3,6 +3,7 @@ package com.example.memorygame
 import android.animation.ArgbEvaluator
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +25,8 @@ import com.example.memorygame.models.MemoryGame
 import com.example.memorygame.utils.EXTRA_BOARD_SIZE
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,8 +35,9 @@ class MainActivity : AppCompatActivity() {
         private const val CREATE_REQUEST_CODE =248
     }
     lateinit var playIB: ImageButton
-    //lateinit var pauseIB: ImageButton
+    lateinit var pauseIB: ImageButton
     //lateinit var mediaPlayer: MediaPlayer
+    var mMediaPlayer: MediaPlayer? = null
     private lateinit var clRoot: ConstraintLayout
     private lateinit var rvBoard: RecyclerView
     private lateinit var tvHamleS: TextView
@@ -56,14 +60,21 @@ class MainActivity : AppCompatActivity() {
         tvHamleS= findViewById(R.id.tvHamleS)
         tvEsS=findViewById(R.id.tvEsS)
         playIB=findViewById((R.id.btn_sound))
+        pauseIB=findViewById(R.id.btn_pause)
         playIB.setOnClickListener{
-            val intent =Intent(this,LoginActivity::class.java)
-            startActivity(intent)
+            playSound()
+
+            /*val intent =Intent(this,LoginActivity::class.java)
+            startActivity(intent)*/
+        }
+        pauseIB.setOnClickListener{
+            stopSound()
+
         }
 
-        val intent =Intent(this,CreateActivity::class.java)
+        /*val intent =Intent(this,CreateActivity::class.java)
         intent.putExtra(EXTRA_BOARD_SIZE,BoardSize.EASY)
-        startActivity(intent)
+        startActivity(intent)*/
 
         setupBoard()
     }
@@ -92,6 +103,19 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.custom ->{
                 showCreationDialog()
+                return true
+            }
+            R.id.signin ->{
+                val intent =Intent(this,LoginActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+
+            R.id.signout ->{
+                firebaseAuth= Firebase.auth
+                firebaseAuth.signOut()
+                val intent =Intent(this,LoginActivity::class.java)
+                startActivity(intent)
                 return true
             }
         }
@@ -195,6 +219,28 @@ class MainActivity : AppCompatActivity() {
         }
         tvHamleS.text = "Hamle Sayısı: ${memoryGame.getNumMoves()}"
         adapter.notifyDataSetChanged()
+    }
+    // 1. Plays the water sound
+    fun playSound() {
+        if (mMediaPlayer == null) {
+            mMediaPlayer = MediaPlayer.create(this, R.raw.prologue)
+            mMediaPlayer!!.isLooping = true
+            mMediaPlayer!!.start()
+        } else mMediaPlayer!!.start()
+    }
+
+    // 2. Pause playback
+    fun pauseSound() {
+        if (mMediaPlayer?.isPlaying == true) mMediaPlayer?.pause()
+    }
+
+    // 3. Stops playback
+    fun stopSound() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer!!.stop()
+            mMediaPlayer!!.release()
+            mMediaPlayer = null
+        }
     }
 
 
