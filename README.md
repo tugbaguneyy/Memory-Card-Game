@@ -5,6 +5,7 @@ Welcome to the Harry Potter Memory Card Game! This Android application is design
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Photos from the game](photos-from-the-game)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
@@ -17,6 +18,27 @@ Welcome to the Harry Potter Memory Card Game! This Android application is design
 
 The Harry Potter Memory Card Game is an Android application that challenges players to match cards with Harry Potter characters while testing their memory and cognitive skills. With different difficulty levels and a time limit, the game offers an entertaining experience for Harry Potter fans of all ages.
 
+## Photos from the game
+
+<p>Easy Mode:</p>
+
+![Screenshot1](https://github.com/tugbaguneyy/Memory-Card-Game/blob/master/memory%20game%201.png)
+
+<p>Medium Mode:</p>
+
+![Screenshot2](https://github.com/tugbaguneyy/Memory-Card-Game/blob/master/memory%20fame%202.png)
+
+<p>Hard Mode:</p>
+
+![Screenshot3](https://github.com/tugbaguneyy/Memory-Card-Game/blob/master/memory%20game%203.png)
+
+<p>Sign in Screen:</p>
+
+![Screenshot4](https://github.com/tugbaguneyy/Memory-Card-Game/blob/master/memory%20game%204.png)
+
+<p>Sign up Screen:</p>
+
+![Screenshot5](https://github.com/tugbaguneyy/Memory-Card-Game/blob/master/memory%20game%205.png)
 ## Features
 
 - Match cards featuring Harry Potter characters.
